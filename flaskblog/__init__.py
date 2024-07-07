@@ -6,30 +6,35 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from flaskblog.config import Config
 
-
-
+# Extensions initialization
 db = SQLAlchemy()
-migrate = Migrate(db)
-with app.app_context():
-    db.create_all()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
-login_manager.login_view = 'users.login'
-login_manager.login_message_category = 'info'
-
 mail = Mail()
+migrate = Migrate()
 
 
-def create_app(config_class = Config):
+def create_app(config_class: type = Config) -> Flask:
+    """
+    Create and configure the Flask application.
+
+    Args:
+        config_class (type): The configuration class for the Flask app.
+
+    Returns:
+        Flask: The configured Flask application instance.
+    """
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config_class)
 
+    # Initialize extensions with the app
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
-    migrate.init_app(app)
+    migrate.init_app(app, db)
 
+    # Register blueprints
     from flaskblog.users.routes import users
     from flaskblog.posts.routes import posts
     from flaskblog.main.routes import main
@@ -37,5 +42,5 @@ def create_app(config_class = Config):
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_blueprint(main)
-    
+
     return app

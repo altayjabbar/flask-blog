@@ -1,80 +1,87 @@
+/*
+   CSS for styling a blog website.
+   Adjusts background colors, fonts, and layout for various sections.
+*/
+
+/* Body styles */
 body {
-  background: #fafafa;
-  color: #333333;
-  margin-top: 5rem;
+  background: #fafafa;  /* Light gray background */
+  color: #333333;       /* Dark gray text */
+  margin-top: 5rem;     /* Top margin */
 }
 
+/* Heading styles */
 h1, h2, h3, h4, h5, h6 {
-  color: #444444;
+  color: #444444;  /* Dark gray headings */
 }
 
-.bg-steel {
-  background-color: #5f788a;
-}
-
+/* Navigation bar styles */
 .site-header .navbar-nav .nav-link {
-  color: #cbd5db;
+  color: #cbd5db;  /* Light gray navigation link text */
 }
 
 .site-header .navbar-nav .nav-link:hover {
-  color: #ffffff;
+  color: #ffffff;  /* White navigation link text on hover */
 }
 
 .site-header .navbar-nav .nav-link.active {
-  font-weight: 500;
+  font-weight: 500;  /* Bold font for active navigation link */
 }
 
+/* Content section styles */
 .content-section {
-  background: #ffffff;
-  padding: 10px 20px;
-  border: 1px solid #dddddd;
-  border-radius: 3px;
-  margin-bottom: 20px;
+  background: #ffffff;     /* White background */
+  padding: 10px 20px;     /* Padding inside the section */
+  border: 1px solid #dddddd;  /* Light gray border */
+  border-radius: 3px;     /* Rounded corners */
+  margin-bottom: 20px;    /* Bottom margin */
 }
 
+/* Article styles */
 .article-title {
-  color: #444444;
+  color: #444444;  /* Dark gray article titles */
 }
 
 a.article-title:hover {
-  color: #428bca;
-  text-decoration: none;
+  color: #428bca;  /* Blue article titles on hover */
+  text-decoration: none;  /* Remove underline on hover */
 }
 
 .article-content {
-  white-space: pre-line;
+  white-space: pre-line;  /* Preserve line breaks in content */
 }
 
 .article-img {
-  height: 65px;
-  width: 65px;
-  margin-right: 16px;
+  height: 65px;   /* Image height */
+  width: 65px;    /* Image width */
+  margin-right: 16px;  /* Right margin */
 }
 
 .article-metadata {
-  padding-bottom: 1px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid #e3e3e3
+  padding-bottom: 1px;  /* Bottom padding */
+  margin-bottom: 4px;   /* Bottom margin */
+  border-bottom: 1px solid #e3e3e3;  /* Light gray bottom border */
 }
 
 .article-metadata a:hover {
-  color: #333;
-  text-decoration: none;
+  color: #333;   /* Dark gray links on hover */
+  text-decoration: none;  /* Remove underline on hover */
 }
 
 .article-svg {
-  width: 25px;
-  height: 25px;
-  vertical-align: middle;
+  width: 25px;   /* SVG icon width */
+  height: 25px;  /* SVG icon height */
+  vertical-align: middle;  /* Align vertically in line */
 }
 
+/* Account section styles */
 .account-img {
-  height: 125px;
-  width: 125px;
-  margin-right: 20px;
-  margin-bottom: 16px;
+  height: 125px;  /* Account image height */
+  width: 125px;   /* Account image width */
+  margin-right: 20px;  /* Right margin */
+  margin-bottom: 16px; /* Bottom margin */
 }
 
 .account-heading {
-  font-size: 2.5rem;
+  font-size: 2.5rem;  /* Large font size for account heading */
 }
