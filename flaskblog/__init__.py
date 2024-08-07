@@ -6,13 +6,13 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from flaskblog.config import Config
 
+
 # Extensions initialization
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 mail = Mail()
 migrate = Migrate()
-
 
 def create_app(config_class: type = Config) -> Flask:
     """
@@ -38,9 +38,21 @@ def create_app(config_class: type = Config) -> Flask:
     from flaskblog.users.routes import users
     from flaskblog.posts.routes import posts
     from flaskblog.main.routes import main
+    from flaskblog.admin.routes import admin
 
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_blueprint(main)
+    app.register_blueprint(admin)
+    
+    
+
+    from flaskblog.models import Post, User # noqa
+
+ 
+
+    # Import models here to avoid circular imports
+    with app.app_context():
+        db.create_all()
 
     return app
