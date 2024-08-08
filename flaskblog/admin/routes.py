@@ -47,6 +47,7 @@ def delete_user(user_id):
     return jsonify({"message": "User deleted successfully"}), 200
 
 
+
 @admin.route("/posts", methods=["GET", "POST"])
 def list_or_create_posts():
     if request.method == "POST":
@@ -83,3 +84,5 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     return jsonify({"message": "User deleted successfully"}), 200
+
+
