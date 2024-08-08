@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from typing import Union
 from flaskblog import db, bcrypt
-from flaskblog.common.utils import handle_hashed_password_generate
+from flaskblog.common.utils import handle_hashed_password_generate, save_picture
 from flaskblog.models import User, Post
 from flaskblog.users.forms import (
     RegistrationForm,
@@ -11,7 +11,7 @@ from flaskblog.users.forms import (
     RequestResetForm,
     ResetPasswordForm,
 )
-from flaskblog.users.utils import save_picture, send_reset_email
+from flaskblog.users.utils import send_reset_email
 
 users = Blueprint("users", __name__, url_prefix="/users")
 
@@ -85,7 +85,7 @@ def account() -> Union[str, "werkzeug.wrappers.Response"]:
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
-            picture_file = save_picture(form.picture.data)
+            picture_file = save_picture(form.picture.data, 'static/profile_pics')
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data

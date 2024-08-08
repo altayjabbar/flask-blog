@@ -139,7 +139,7 @@
                     } else if (data.message) {
                         alert(data.message);
                         $('#addUserModal').modal('hide');
-                        location.reload();
+                        location.reload(); // Refresh the page to reflect changes
                     }
                 })
                 .catch(error => {
@@ -163,7 +163,7 @@
                     if (data.message) {
                         alert(data.message);
                         $('#editUserModal').modal('hide');
-                        location.reload();
+                        location.reload(); // Refresh the page to reflect changes
                     }
                 })
                 .catch(error => {
@@ -183,7 +183,7 @@
                     if (data.message) {
                         alert(data.message);
                         $('#deleteUserModal').modal('hide');
-                        location.reload();
+                        location.reload(); // Refresh the page to reflect changes
                     }
                 })
                 .catch(error => {
@@ -202,6 +202,15 @@
             modal.find('#editUserId').val(userId);
             modal.find('#editUsername').val(username);
             modal.find('#editEmail').val(email);
+        });
+
+        // Populate Delete User Modal with data
+        $('#deleteUserModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var userId = button.data('id');
+
+            var modal = $(this);
+            modal.find('#deleteUserId').val(userId);
         });
 
         // Function to remove remaining modal backdrops
