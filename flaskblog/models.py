@@ -4,6 +4,7 @@ from flask import current_app
 from flaskblog import db, login_manager
 from flask_login import UserMixin
 
+
 @login_manager.user_loader
 def load_user(user_id: int) -> UserMixin:
     """
@@ -16,6 +17,7 @@ def load_user(user_id: int) -> UserMixin:
         UserMixin: User object corresponding to the provided user_id.
     """
     return User.query.get(int(user_id))
+
 
 class User(db.Model, UserMixin):
     """
@@ -46,6 +48,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default="default2.jpg")
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship("Post", backref="author", lazy=True)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def get_reset_token(self, expires_sec=1800) -> str:
         """
@@ -61,7 +64,7 @@ class User(db.Model, UserMixin):
         return serializer.dumps(self.id, salt="reset-password")
 
     @staticmethod
-    def verify_reset_token(token: str) -> 'User':
+    def verify_reset_token(token: str) -> "User":
         """
         Verifies and retrieves user based on a provided reset token.
 
