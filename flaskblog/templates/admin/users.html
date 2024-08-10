@@ -1,8 +1,37 @@
 {% extends 'admin/base.html' %}
 {% block content %}
 
+<!-- CSS for Night Mode and Morning Mode -->
+<style>
+    body.morning-mode {
+        background-color: #ffffff;
+        color: darkblue;
+    }
+
+    body.night-mode {
+        background-color: black;
+        color: #ecf0f1;
+    }
+
+    .night-mode .table {
+        background-color: black;
+        color: #ecf0f1;
+    }
+
+    .night-mode .modal-content {
+        background-color: black;
+        color: red;
+    }
+
+    .night-mode .btn {
+        background-color: green;
+        color: #ffffff;
+    }
+</style>
+
 <div class="container mt-4">
     <h1 class="mb-4">Users</h1>
+    <button id="toggleMode" class="btn btn-dark mb-3">Switch to Night Mode</button>
     <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#addUserModal">
         Add User
     </button>
@@ -122,8 +151,31 @@
     </div>
 </div>
 
+<!-- JavaScript to Handle Mode Switching and Form Submissions -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const toggleButton = document.getElementById('toggleMode');
+        const body = document.body;
+
+        toggleButton.addEventListener('click', function () {
+            if (body.classList.contains('morning-mode')) {
+                body.classList.remove('morning-mode');
+                body.classList.add('night-mode');
+                toggleButton.textContent = 'Switch to Morning Mode';
+                toggleButton.classList.remove('btn-dark');
+                toggleButton.classList.add('btn-light');
+            } else {
+                body.classList.remove('night-mode');
+                body.classList.add('morning-mode');
+                toggleButton.textContent = 'Switch to Night Mode';
+                toggleButton.classList.remove('btn-light');
+                toggleButton.classList.add('btn-dark');
+            }
+        });
+
+        // Set default mode to morning mode
+        body.classList.add('morning-mode');
+
         // Handle Add User form submission
         document.getElementById('addUserForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the default form submission
@@ -194,36 +246,27 @@
         });
 
         // Populate Edit User Modal with data
+       
+        // Populate Edit User Modal with data
         $('#editUserModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var userId = button.data('id');
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
             var username = button.data('username');
             var email = button.data('email');
 
             var modal = $(this);
-            modal.find('#editUserId').val(userId);
+            modal.find('#editUserId').val(id);
             modal.find('#editUsername').val(username);
             modal.find('#editEmail').val(email);
         });
 
-        // Populate Delete User Modal with data
+        // Populate Delete User Modal with user ID
         $('#deleteUserModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var userId = button.data('id');
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
 
             var modal = $(this);
-            modal.find('#deleteUserId').val(userId);
-        });
-
-        // Function to remove remaining modal backdrops
-        function removeModalBackdrops() {
-            $('.modal-backdrop').remove();
-            $('body').removeClass('modal-open');
-        }
-
-        // Clean up backdrops when modals are hidden
-        $('.modal').on('hidden.bs.modal', function () {
-            removeModalBackdrops();
+            modal.find('#deleteUserId').val(id);
         });
     });
 </script>
