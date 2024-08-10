@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container mt-4">
-    <h1 class="mb-4"></h1>
+    <h1 class="mb-4">Users</h1>
     <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#addUserModal">
         Add User
     </button>
@@ -25,10 +25,12 @@
                 <td>
                     <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editUserModal"
                         data-id="{{ user.id }}" data-username="{{ user.username }}" data-email="{{ user.email }}">
-                        <i class="fas fa-edit"></i></a>
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                     <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteUserModal"
                         data-id="{{ user.id }}">
-                        <i class="fas fa-trash-alt"></i></a>
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
                 </td>
             </tr>
             {% endfor %}

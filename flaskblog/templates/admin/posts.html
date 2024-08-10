@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container mt-4">
-    <h1 class="mb-4" ></h1>
+    <h1 class="mb-4">Posts</h1>
     <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#addPostModal">
         Add Post
     </button>
@@ -24,12 +24,13 @@
                 <td>{{ post.content }}</td>
                 <td>
                     <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editPostModal"
-                        data-id="{{ post.id }}" data-title="{{ post.title }}" data-content="{{ post.content }}"
-                        data-short_desc="{{ post.short_desc }}" data-image="{{ post.image }}">
-                        <i class="fas fa-edit"></i></a>
+                        data-id="{{ post.id }}" data-title="{{ post.title }}" data-content="{{ post.content }}">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                     <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deletePostModal"
                         data-id="{{ post.id }}">
-                        <i class="fas fa-trash-alt"></i></a>
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
                 </td>
             </tr>
             {% endfor %}
@@ -56,15 +57,7 @@
                     </div>
                     <div class="form-group">
                         <label for="content">Content</label>
-                        <textarea class="form-control" id="content" name="content" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="short_desc">Short Description</label>
-                        <input type="text" class="form-control" id="short_desc" name="short_desc" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="image">Image</label>
-                        <input type="file" class="form-control" id="image" name="image" required>
+                        <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Add Post</button>
                 </form>
@@ -93,15 +86,7 @@
                     </div>
                     <div class="form-group">
                         <label for="editContent">Content</label>
-                        <textarea class="form-control" id="editContent" name="content" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="editShortDesc">Short Description</label>
-                        <input type="text" class="form-control" id="editShortDesc" name="short_desc" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editImage">Image</label>
-                        <input type="file" class="form-control" id="editImage" name="image" required>
+                        <textarea class="form-control" id="editContent" name="content" rows="4" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Update Post</button>
                 </form>
@@ -210,15 +195,11 @@
             var postId = button.data('id');
             var title = button.data('title');
             var content = button.data('content');
-            var shortDesc = button.data('short_desc');
-            var image = button.data('image');
 
             var modal = $(this);
             modal.find('#editPostId').val(postId);
             modal.find('#editTitle').val(title);
             modal.find('#editContent').val(content);
-            modal.find('#editShortDesc').val(shortDesc);
-            modal.find('#editImage').val(image);
         });
 
         // Populate Delete Post Modal with data
@@ -230,7 +211,6 @@
             modal.find('#deletePostId').val(postId);
         });
 
-       
         // Function to remove remaining modal backdrops
         function removeModalBackdrops() {
             $('.modal-backdrop').remove();
