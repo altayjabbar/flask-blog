@@ -27,7 +27,7 @@ def list_or_create_posts():
             return jsonify({"message": "Post created successfully"}), 201
         except Exception as e:
             return jsonify({'message':str(e)}),500
-        
+
     posts_list = Post.query.all()
     return render_template('admin/posts.html',posts = posts_list)
 
@@ -48,6 +48,7 @@ def update_post(post_id):
 
 @posts.route("/delete/<int:post_id>", methods=["DELETE"])
 @admin_required
+
 def delete_post(post_id):
     try:
         post = Post.query.get_or_404(post_id)
