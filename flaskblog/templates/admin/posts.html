@@ -1,7 +1,6 @@
 {% extends 'admin/base.html' %}
 {% block content %}
 
-<!-- CSS for Night Mode and Morning Mode -->
 <style>
     body.morning-mode {
         background-color: #ffffff;
@@ -41,7 +40,8 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Title</th>
-                <th scope="col">Content</th>
+                <th scope="col">Short Description</th>
+                <th scope="col">Author</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -50,10 +50,11 @@
             <tr>
                 <td>{{ post.id }}</td>
                 <td>{{ post.title }}</td>
-                <td>{{ post.content[:50] }}...</td>
+                <td>{{ post.short_desc }}</td>
+                <td>{{ post.author.username }}</td>
                 <td>
                     <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editPostModal"
-                        data-id="{{ post.id }}" data-title="{{ post.title }}" data-content="{{ post.content }}">
+                        data-id="{{ post.id }}" data-title="{{ post.title }}" data-short_desc="{{ post.short_desc }}" data-content="{{ post.content }}">
                         <i class="fas fa-edit"></i> Edit
                     </a>
                     <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deletePostModal"
@@ -85,8 +86,12 @@
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="form-group">
+                        <label for="short_desc">Short Description</label>
+                        <input type="text" class="form-control" id="short_desc" name="short_desc" required>
+                    </div>
+                    <div class="form-group">
                         <label for="content">Content</label>
-                        <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                        <textarea class="form-control" id="content" name="content" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Add Post</button>
                 </form>
@@ -114,8 +119,12 @@
                         <input type="text" class="form-control" id="editTitle" name="title" required>
                     </div>
                     <div class="form-group">
+                        <label for="editShortDesc">Short Description</label>
+                        <input type="text" class="form-control" id="editShortDesc" name="short_desc" required>
+                    </div>
+                    <div class="form-group">
                         <label for="editContent">Content</label>
-                        <textarea class="form-control" id="editContent" name="content" rows="5" required></textarea>
+                        <textarea class="form-control" id="editContent" name="content" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Update Post</button>
                 </form>
@@ -141,121 +150,88 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDeletePost">Delete</button>
+                <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- JavaScript to Handle Mode Switching and Form Submissions -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const toggleButton = document.getElementById('toggleMode');
-        const body = document.body;
 
-        toggleButton.addEventListener('click', function () {
-            if (body.classList.contains('morning-mode')) {
-                body.classList.remove('morning-mode');
-                body.classList.add('night-mode');
-                toggleButton.textContent = 'Switch to Morning Mode';
-                toggleButton.classList.remove('btn-dark');
-                toggleButton.classList.add('btn-light');
-            } else {
-                body.classList.remove('night-mode');
-                body.classList.add('morning-mode');
-                toggleButton.textContent = 'Switch to Night Mode';
-                toggleButton.classList.remove('btn-light');
-                toggleButton.classList.add('btn-dark');
+        // Handle Add Post form submission
+        document.getElementById('addPostForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var formData = new FormData(this);
+
+            try {
+                const response = await fetch('/admin/posts', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(data.message);
+
+                    $('#addPostModal').modal('hide');
+                    location.reload(); // Refresh the page to reflect changes
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to add the post.');
             }
         });
 
-        // Set default mode to morning mode
-        body.classList.add('morning-mode');
-
-        // Handle Add Post form submission
-        document.getElementById('addPostForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            var formData = new FormData(this);
-
-            fetch('/admin/posts', {
-                method: 'POST',
-                body: formData,
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        alert(data.error);
-                    } else if (data.message) {
-                        alert(data.message);
-                        $('#addPostModal').modal('hide');
-                        location.reload(); // Refresh the page to reflect changes
-                    }
-                })
-                .catch(error => {
-                    alert('An error occurred: ' + error);
-                });
-        });
-
-        // Handle Edit Post form submission
-        document.getElementById('editPostForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            var formData = new FormData(this);
-            var postId = document.getElementById('editPostId').value;
-
-            fetch('/admin/posts/update/' + postId, {
-                method: 'PUT',
-                body: formData,
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message) {
-                        alert(data.message);
-                        $('#editPostModal').modal('hide');
-                        location.reload(); // Refresh the page to reflect changes
-                    }
-                })
-                .catch(error => {
-                    alert('An error occurred: ' + error);
-                });
-        });
-
-        // Handle Delete Post confirmation
-        document.getElementById('confirmDeletePost').addEventListener('click', function () {
-            var postId = document.getElementById('deletePostId').value;
-
-            fetch('/admin/posts/delete/' + postId, {
-                method: 'DELETE',
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message) {
-                        alert(data.message);
-                        $('#deletePostModal').modal('hide');
-                        location.reload(); // Refresh the page to reflect changes
-                    }
-                })
-                .catch(error => {
-                    alert('An error occurred: ' + error);
-                });
-        });
-
-        // Populate Edit Post Modal with data
+        // Handle Edit button click (populate modal with post data)
         $('#editPostModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
-            var postId = button.data
             var postId = button.data('id');
             var postTitle = button.data('title');
+            var postShortDesc = button.data('short_desc');
             var postContent = button.data('content');
 
             var modal = $(this);
             modal.find('#editPostId').val(postId);
             modal.find('#editTitle').val(postTitle);
+            modal.find('#editShortDesc').val(postShortDesc);
             modal.find('#editContent').val(postContent);
         });
 
-        // Populate Delete Post Modal with data
+        // Handle Edit Post form submission
+        document.getElementById('editPostForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var postId = document.getElementById('editPostId').value;
+            var formData = new FormData(this);
+
+            try {
+                const response = await fetch(`/admin/posts/update/${postId}`, {
+                    method: 'PUT',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(data.message);
+
+                    $('#editPostModal').modal('hide');
+                    location.reload(); // Refresh the page to reflect changes
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to update the post.');
+            }
+        });
+
+        // Handle Delete button click (populate modal with post ID)
         $('#deletePostModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
             var postId = button.data('id');
@@ -263,7 +239,46 @@
             var modal = $(this);
             modal.find('#deletePostId').val(postId);
         });
+
+        // Handle Delete confirmation button click
+        document.getElementById('confirmDelete').addEventListener('click', async function () {
+            var postId = document.getElementById('deletePostId').value;
+
+            try {
+                const response = await fetch(`/admin/posts/delete/${postId}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    alert('Post deleted successfully');
+                    $('#deletePostModal').modal('hide');
+                    location.reload(); // Refresh the page to reflect changes
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to delete the post.');
+            }
+        });
+
+        // Handle Night/Morning mode toggle
+        const toggleModeButton = document.getElementById('toggleMode');
+        toggleModeButton.addEventListener('click', function () {
+            const bodyElement = document.body;
+            if (bodyElement.classList.contains('night-mode')) {
+                bodyElement.classList.remove('night-mode');
+                bodyElement.classList.add('morning-mode');
+                toggleModeButton.textContent = 'Switch to Night Mode';
+            } else {
+                bodyElement.classList.remove('morning-mode');
+                bodyElement.classList.add('night-mode');
+                toggleModeButton.textContent = 'Switch to Morning Mode';
+            }
+        });
     });
 </script>
 
 {% endblock %}
+    
