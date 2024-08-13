@@ -48,7 +48,6 @@ def update_post(post_id):
 
 @posts.route("/delete/<int:post_id>", methods=["DELETE"])
 @admin_required
-
 def delete_post(post_id):
     try:
         post = Post.query.get_or_404(post_id)
