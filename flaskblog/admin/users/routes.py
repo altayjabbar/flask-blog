@@ -37,9 +37,10 @@ def update_user(user_id):
         user.username = request.form["username"]
         user.email = request.form["email"]
         db.session.commit(user)
-        return jsonify({"message": "User updated successfully"}), 200
+        return jsonify({"message": "User updated successfully"})
     except Exception as e:
-        return jsonify({"message": str(e)}), 500
+        return jsonify({"message": str(e)})
+    
 
 
 
